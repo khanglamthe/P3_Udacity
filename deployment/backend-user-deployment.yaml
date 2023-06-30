@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-user-app-uda
+  labels:
+    app: backend-user-app-uda
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-user-app-uda
+  template:
+    metadata:
+      labels:
+        app: backend-user-app-uda
+    spec:
+      containers:
+      - name: udagram-api-user
+        image: khanglt1/udagram-api-user:v1
+        env:
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: env-security-uda
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: env-security-uda
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: env-security-uda
+              key: POSTGRES_DB
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: env-security-uda
+              key: JWT_SECRET
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: env-config-uda
+              key:  POSTGRES_HOST
+        - name: AWS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret-project3-uda
+              key: AWS_REGION
+        - name: AWS_PROFILE
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret-project3-uda
+              key: AWS_PROFILE
+        - name: AWS_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              name: env-config-uda
+              key:  AWS_BUCKET
+        - name: URL
+          valueFrom:
+            configMapKeyRef:
+              name: env-config-uda
+              key:  URL
+        - name: AWS_DEFAULT_REGION
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret-project3-uda
+              key: AWS_DEFAULT_REGION
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: aws-secret
+          mountPath: "/root/.aws/"
+          readOnly: true
+      restartPolicy: Always
+      volumes:
+      - name: aws-secret
+        secret:
+          secretName: aws-secret-project3-uda

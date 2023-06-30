@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reverseproxy-app-uda
+  labels:
+    app: reverseproxy-app-uda
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reverseproxy-app-uda
+  template:
+    metadata:
+      labels:
+        app: reverseproxy-app-uda
+    spec:
+      containers:
+      - name: udagram-reverseproxy
+        image: khanglt1/udagram-reverseproxy:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always

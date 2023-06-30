@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: udagram-api-feed
-        image: khanglt1/udagram-api-feed:v1
+        image: khanglt/udagram-api-feed:v1
         env:
         - name: POSTGRES_USERNAME
           valueFrom:
